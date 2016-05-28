@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.tarungoyaldev.android.calculator.MainActivity"
+    android:id="@+id/calculatorLayout"
+    android:padding="0dp"
+    android:orientation="vertical"
+    android:background="@color/background_material_dark"
+    android:columnCount="4"
+    android:rowCount="6"
+    android:layout_margin="0dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="0"
+        android:id="@+id/textView"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_columnSpan="4"
+        android:textSize="48sp"
+        android:textColor="@color/whiteColor"
+        android:background="@color/blackColor"
+        android:layout_gravity="fill"
+        android:gravity="bottom|right" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/clearButton"
+        android:layout_column="0"
+        android:layout_row="1"
+        android:text="AC" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/changeSizeButton"
+        android:layout_column="1"
+        android:layout_row="1"
+        android:text="+/-" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/percentageButton"
+        android:layout_column="2"
+        android:layout_row="1"
+        android:text="%" />
+    <Button
+        style="@style/calculator_button.operation"
+        android:id="@+id/divisionButton"
+        android:layout_column="3"
+        android:layout_row="1"
+        android:text="/" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/sevenButton"
+        android:layout_column="0"
+        android:layout_row="2"
+        android:tag="7"
+        android:text="7" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/eightButton"
+        android:layout_column="1"
+        android:layout_row="2"
+        android:tag="8"
+        android:text="8" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/nineButton"
+        android:layout_column="2"
+        android:layout_row="2"
+        android:tag="9"
+        android:text="9" />
+    <Button
+        style="@style/calculator_button.operation"
+        android:id="@+id/multiplicationButton"
+        android:layout_column="3"
+        android:layout_row="2"
+        android:text="X" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/fourButton"
+        android:layout_column="0"
+        android:layout_row="3"
+        android:tag="4"
+        android:text="4" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/fiveButton"
+        android:layout_column="1"
+        android:layout_row="3"
+        android:tag="5"
+        android:text="5" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/sixButton"
+        android:layout_column="2"
+        android:layout_row="3"
+        android:tag="6"
+        android:text="6" />
+    <Button
+        style="@style/calculator_button.operation"
+        android:id="@+id/subtractionButton"
+        android:layout_column="3"
+        android:layout_row="3"
+        android:text="-" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/oneButton"
+        android:layout_column="0"
+        android:layout_row="4"
+        android:tag="1"
+        android:text="1" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/twoButton"
+        android:layout_column="1"
+        android:layout_row="4"
+        android:tag="2"
+        android:text="2" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/threeButton"
+        android:layout_column="2"
+        android:layout_row="4"
+        android:tag="3"
+        android:text="3" />
+    <Button
+        style="@style/calculator_button.operation"
+        android:id="@+id/additionButton"
+        android:layout_column="3"
+        android:layout_row="4"
+        android:text="+" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/zeroButton"
+        android:layout_column="0"
+        android:layout_row="5"
+        android:layout_columnSpan="2"
+        android:tag="0"
+        android:text="0" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/decimalButton"
+        android:layout_column="2"
+        android:layout_row="5"
+        android:tag="."
+        android:text="." />
+    <Button
+        style="@style/calculator_button.operation"
+        android:id="@+id/equalButton"
+        android:layout_column="3"
+        android:layout_row="5"
+        android:text="=" />
+</GridLayout>
+

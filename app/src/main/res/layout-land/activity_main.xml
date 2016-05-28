@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.tarungoyaldev.android.calculator.MainActivity"
+    android:id="@+id/calculatorLayout"
+    android:padding="0dp"
+    android:orientation="vertical"
+    android:background="@color/background_material_dark"
+    android:columnCount="8"
+    android:rowCount="6"
+    android:layout_margin="0dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="0"
+        android:id="@+id/textView"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_columnSpan="8"
+        android:textSize="48sp"
+        android:textColor="@color/whiteColor"
+        android:background="@color/blackColor"
+        android:layout_gravity="fill"
+        android:gravity="bottom|right"/>
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/squareButton"
+        android:layout_column="0"
+        android:layout_row="1"
+        android:text="x²" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/cubeButton"
+        android:layout_column="0"
+        android:layout_row="2"
+        android:text="x³" />
+    <Button
+        style="@style/calculator_button.operation.advance"
+        android:id="@+id/powButton"
+        android:layout_column="0"
+        android:layout_row="3"
+        android:text="x^y" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/epowButton"
+        android:layout_column="0"
+        android:layout_row="4"
+        android:text="e^x" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/tenPowButton"
+        android:layout_column="0"
+        android:layout_row="5"
+        android:text="10^x" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/inverseButton"
+        android:layout_column="1"
+        android:layout_row="1"
+        android:text="x⁻¹" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/squareRootButton"
+        android:layout_column="1"
+        android:layout_row="2"
+        android:text="√x" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/cubeRootButton"
+        android:layout_column="1"
+        android:layout_row="3"
+        android:text="³√x" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/naturalLogButton"
+        android:layout_column="1"
+        android:layout_row="4"
+        android:text="ln" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/logButton"
+        android:layout_column="1"
+        android:layout_row="5"
+        android:text="log" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/factorialButton"
+        android:layout_column="2"
+        android:layout_row="1"
+        android:text="x!" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/sinButton"
+        android:layout_column="2"
+        android:layout_row="2"
+        android:text="sin" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/cosButton"
+        android:layout_column="2"
+        android:layout_row="3"
+        android:text="cos" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/tanButton"
+        android:layout_column="2"
+        android:layout_row="4"
+        android:text="tan" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/eButton"
+        android:layout_column="2"
+        android:layout_row="5"
+        android:text="e" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/randButton"
+        android:layout_column="3"
+        android:layout_row="1"
+        android:text="Rand" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/pieButton"
+        android:layout_column="3"
+        android:layout_row="5"
+        android:text="Π" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/sinhButton"
+        android:layout_column="3"
+        android:layout_row="2"
+        android:text="sinh" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/coshButton"
+        android:layout_column="3"
+        android:layout_row="3"
+        android:text="cosh" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/tanhButton"
+        android:layout_column="3"
+        android:layout_row="4"
+        android:text="tanh" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/clearButton"
+        android:layout_column="4"
+        android:layout_row="1"
+        android:text="AC" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/changeSizeButton"
+        android:layout_column="5"
+        android:layout_row="1"
+        android:text="+/-" />
+    <Button
+        style="@style/calculator_button.unary_operation"
+        android:id="@+id/percentageButton"
+        android:layout_column="6"
+        android:layout_row="1"
+        android:text="%" />
+    <Button
+        style="@style/calculator_button.operation"
+        android:id="@+id/divisionButton"
+        android:layout_column="7"
+        android:layout_row="1"
+        android:text="/" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/sevenButton"
+        android:layout_column="4"
+        android:layout_row="2"
+        android:tag="7"
+        android:text="7" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/eightButton"
+        android:layout_column="5"
+        android:layout_row="2"
+        android:tag="8"
+        android:text="8" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/nineButton"
+        android:layout_column="6"
+        android:layout_row="2"
+        android:tag="9"
+        android:text="9" />
+    <Button
+        style="@style/calculator_button.operation"
+        android:id="@+id/multiplicationButton"
+        android:layout_column="7"
+        android:layout_row="2"
+        android:text="X" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/fourButton"
+        android:layout_column="4"
+        android:layout_row="3"
+        android:tag="4"
+        android:text="4" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/fiveButton"
+        android:layout_column="5"
+        android:layout_row="3"
+        android:tag="5"
+        android:text="5" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/sixButton"
+        android:layout_column="6"
+        android:layout_row="3"
+        android:tag="6"
+        android:text="6" />
+    <Button
+        style="@style/calculator_button.operation"
+        android:id="@+id/subtractionButton"
+        android:layout_column="7"
+        android:layout_row="3"
+        android:text="-" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/oneButton"
+        android:layout_column="4"
+        android:layout_row="4"
+        android:tag="1"
+        android:text="1" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/twoButton"
+        android:layout_column="5"
+        android:layout_row="4"
+        android:tag="2"
+        android:text="2" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/threeButton"
+        android:layout_column="6"
+        android:layout_row="4"
+        android:tag="3"
+        android:text="3" />
+    <Button
+        style="@style/calculator_button.operation"
+        android:id="@+id/additionButton"
+        android:layout_column="7"
+        android:layout_row="4"
+        android:text="+" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/zeroButton"
+        android:layout_column="4"
+        android:layout_row="5"
+        android:layout_columnSpan="2"
+        android:tag="0"
+        android:text="0" />
+    <Button
+        style="@style/calculator_button.number"
+        android:id="@+id/decimalButton"
+        android:layout_column="6"
+        android:layout_row="5"
+        android:tag="."
+        android:text="." />
+    <Button
+        style="@style/calculator_button.operation"
+        android:id="@+id/equalButton"
+        android:layout_column="7"
+        android:layout_row="5"
+        android:text="=" />
+</GridLayout>
+
+
