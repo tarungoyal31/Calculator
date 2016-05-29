@@ -11,15 +11,17 @@ import java.text.DecimalFormat;
  */
 public class CalculatorUtilities {
 
-    public static final String convertDoubleToString(double value) {
+    public static String convertDoubleToString(double value) {
         if (value > 1E10 || value < 1E-10 && value > 1E-50) {
             return (new DecimalFormat("0.#####E0")).format(value);
+        } else if (value > 1E5){
+            return (new DecimalFormat("##########0.#####")).format(value);
         } else {
             return (new DecimalFormat("##########0.##########")).format(value);
         }
     }
 
-    public static final double convertStringToDouble(String valueString) {
+    public static double convertStringToDouble(String valueString) {
         try {
             if (valueString.equals("∞")) {
                 return Double.POSITIVE_INFINITY;
@@ -34,12 +36,29 @@ public class CalculatorUtilities {
         }
     }
 
-    public static String operate(MainActivity.Operation operation, double firstValue,
-                                 double secondValue) {
+    public static String applyOperationAndGetString(MainActivity.Operation operation,
+                                                    double firstValue, double secondValue) {
+        return convertDoubleToString(applyOperation(operation, firstValue, secondValue));
+    }
+
+    public static double asinh (double x) {
+        return Math.log(x + Math.sqrt(1 + x*x));
+    }
+
+    public static double acosh (double x) {
+        return Math.log(x + Math.sqrt(1 - x*x));
+    }
+
+    public static double atanh (double x) {
+        return 0.5 * Math.log((x+1)/(x-1));
+    }
+
+    public static double applyOperation(MainActivity.Operation operation,
+                                        double firstValue, double secondValue) {
         if (firstValue == Double.NEGATIVE_INFINITY || secondValue == Double.NEGATIVE_INFINITY) {
-            return convertDoubleToString(Double.NEGATIVE_INFINITY);
+            return Double.NEGATIVE_INFINITY;
         } else if (firstValue == Double.POSITIVE_INFINITY || secondValue == Double.POSITIVE_INFINITY) {
-            return convertDoubleToString(Double.POSITIVE_INFINITY);
+            return Double.POSITIVE_INFINITY;
         }
         double result;
         switch (operation) {
@@ -58,32 +77,34 @@ public class CalculatorUtilities {
             case POW:
                 result = Math.pow(firstValue, secondValue);
                 break;
+            case EE:
+                result = firstValue * Math.pow(10, secondValue);
+                break;
             case EQUAL:
             default:
                 result = secondValue;
                 break;
         }
-        String resultString = convertDoubleToString(result);
-        return resultString;
+        return result;
     }
-
     public static double factorial(double value) {
-        boolean isNegative = value > 0 ? false : true;
+        boolean isNegative = value < 0;
+        if (isNegative) value = 0 - value;
         Double result;
         if (value > 120) {
             result = Double.POSITIVE_INFINITY;
-        }
-        if (value % 1 == 0 && value > 0) {
-            result = 1.0;
-            while (value > 0) {
-                result *= value;
-                value -= 1;
+        } else {
+            if (value % 1 == 0 && value > 0) {
+                result = 1.0;
+                while (value > 0) {
+                    result *= value;
+                    value -= 1;
+                }
+            } else {
+                result = gamma(value + 1);
             }
         }
-        else {
-            result = gamma(value + 1);
-        }
-        return result;
+        return isNegative ? 0 - result : result;
     }
 
     public static double gamma(double value) {

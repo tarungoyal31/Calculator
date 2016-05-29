@@ -2,6 +2,7 @@ package com.tarungoyaldev.android.calculator;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private Stack<String> temporaryStack = new Stack<>();
     private String temporaryString = "";
     private OperationType lastOperation;
+    private boolean isRadian = true;
+    private boolean isMoreOperation = false;
 
     public enum OperationType {
         UNARY,
@@ -39,12 +42,14 @@ public class MainActivity extends AppCompatActivity {
         SUBTRACTION(1),
         MULTIPLICATION(2),
         DIVISION(2),
-        POW (3);
+        POW(3),
+        EE(3),
+        OPENBRACKET(0);
 
 
         private int value;
 
-        private Operation(int value) {
+        Operation(int value) {
             this.value = value;
         }
 
@@ -152,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
             temporaryStack.addAll(calculationStack);
             temporaryString = displayStringObserver.getObservedString();
         }
+        Operation buttonOperation;
         if (view instanceof Button) {
-            Operation buttonOperation;
             switch (viewId) {
                 case R.id.additionButton:
                     buttonOperation = Operation.ADDITION;
@@ -170,6 +175,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.powButton:
                     buttonOperation = Operation.POW;
                     break;
+                case R.id.eeButton:
+                    buttonOperation = Operation.EE;
+                    break;
                 case R.id.equalButton:
                     buttonOperation = Operation.EQUAL;
                     break;
@@ -182,41 +190,15 @@ public class MainActivity extends AppCompatActivity {
                 calculationStack.addAll(temporaryStack);
                 displayStringObserver.updateString(temporaryString);
             }
-            applyOperation(buttonOperation);
+        } else {
+            return;
         }
         if (viewId != R.id.equalButton) {
+            applyOperation(buttonOperation);
             lastOperation = OperationType.BINARY;
         } else {
+            applyEqualOperation();
             lastOperation = OperationType.EQUAL;
-        }
-    }
-
-    private void applyOperation(Operation operation) {
-        Operation currentOperation = Operation.valueOf(calculationStack.peek());
-        if (operation.equals(Operation.EQUAL)) {
-            while (!calculationStack.peek().equals(Operation.NULL.name())) {
-                Double currentValue = CalculatorUtilities.convertStringToDouble(displayStringObserver.getObservedString());
-                Operation prevOperation = Operation.valueOf(calculationStack.pop());
-                double prevValue = CalculatorUtilities.convertStringToDouble(calculationStack.pop());
-                displayStringObserver.updateString(CalculatorUtilities.operate(prevOperation,prevValue,currentValue));
-            }
-            return;
-        } else if (currentOperation.isLowerPrecedence(operation)) {
-            calculationStack.push(displayStringObserver.getObservedString());
-            if (!operation.equals(Operation.NULL)) {
-                displayStringObserver.updateString("0", false);
-                calculationStack.push(operation.name());
-            } else {
-                calculationStack.removeAllElements();
-                calculationStack.push(Operation.NULL.name());
-            }
-        } else {
-            double displayValue = CalculatorUtilities.convertStringToDouble(displayStringObserver.getObservedString());
-            Operation previousOperation = Operation.valueOf(calculationStack.pop());
-            double previousValue = CalculatorUtilities.convertStringToDouble(calculationStack.pop());
-            String newValue = CalculatorUtilities.operate(previousOperation, previousValue, displayValue);
-            displayStringObserver.updateString(newValue);
-            applyOperation(operation);
         }
     }
 
@@ -226,7 +208,8 @@ public class MainActivity extends AppCompatActivity {
             Button button = (Button) findViewById(viewId);
             String displayString = displayStringObserver.getObservedString();
             double textValue = CalculatorUtilities.convertStringToDouble(displayString);
-            if (textValue == Double.NEGATIVE_INFINITY || textValue == Double.POSITIVE_INFINITY) {
+            if ((textValue == Double.NEGATIVE_INFINITY || textValue == Double.POSITIVE_INFINITY)
+                    && viewId != R.id.clearButton) {
                 return;
             }
             switch (viewId) {
@@ -280,22 +263,12 @@ public class MainActivity extends AppCompatActivity {
                             CalculatorUtilities.factorial(textValue)));
                     break;
                 case R.id.sinButton:
-                    displayStringObserver.updateString(CalculatorUtilities.convertDoubleToString(Math.sin(textValue)));
-                    break;
                 case R.id.cosButton:
-                    displayStringObserver.updateString(CalculatorUtilities.convertDoubleToString(Math.cos(textValue)));
-                    break;
                 case R.id.tanButton:
-                    displayStringObserver.updateString(CalculatorUtilities.convertDoubleToString(Math.tan(textValue)));
-                    break;
                 case R.id.sinhButton:
-                    displayStringObserver.updateString(CalculatorUtilities.convertDoubleToString(Math.sinh(textValue)));
-                    break;
                 case R.id.coshButton:
-                    displayStringObserver.updateString(CalculatorUtilities.convertDoubleToString(Math.cosh(textValue)));
-                    break;
                 case R.id.tanhButton:
-                    displayStringObserver.updateString(CalculatorUtilities.convertDoubleToString(Math.tanh(textValue)));
+                    handleTrigonometryOperation(button, textValue);
                     break;
                 case R.id.randButton:
                     displayStringObserver.updateString(CalculatorUtilities.convertDoubleToString(Math.random()));
@@ -306,9 +279,150 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.pieButton:
                     displayStringObserver.updateString(CalculatorUtilities.convertDoubleToString(Math.PI));
                     break;
+                case R.id.moreOptionButton:
+                    handleMoreOptionButton();
+                    break;
+                case R.id.radianButton:
+                    handleRadianButton();
+                case R.id.openBracketButton:
+                    if (!lastOperation.equals(OperationType.BINARY) && !calculationStack.peek().equals(Operation.NULL.name())) {
+                        applyOperation(Operation.MULTIPLICATION);
+                    }
+                    calculationStack.push(Operation.OPENBRACKET.name());
+                    calculationStack.push("0");
+                    calculationStack.push(Operation.ADDITION.name());
+                    displayStringObserver.updateString("0", false);
+                    break;
+                case R.id.closeBracketButton:
+                    applyCloseBracketOperation();
+                    break;
             }
         }
         lastOperation = OperationType.UNARY;
+    }
+
+    private void applyEqualOperation() {
+        Operation prevOperation = Operation.valueOf(calculationStack.peek());
+        Double currentValue = CalculatorUtilities.convertStringToDouble(displayStringObserver.getObservedString());
+        while (!calculationStack.peek().equals(Operation.NULL.name())) {
+            calculationStack.pop();
+            if (prevOperation.equals(Operation.OPENBRACKET)) {
+                continue;
+            }
+            double prevValue = CalculatorUtilities.convertStringToDouble(calculationStack.pop());
+            currentValue = CalculatorUtilities.applyOperation(prevOperation,prevValue,currentValue);
+            prevOperation = Operation.valueOf(calculationStack.peek());
+        }
+        displayStringObserver.updateString(CalculatorUtilities.convertDoubleToString(currentValue));
+    }
+
+    private void applyCloseBracketOperation() {
+        Operation prevOperation = Operation.valueOf(calculationStack.peek());
+        Double currentValue = CalculatorUtilities.convertStringToDouble(displayStringObserver.getObservedString());
+        while (!prevOperation.equals(Operation.NULL) && !prevOperation.equals(Operation.OPENBRACKET)) {
+            calculationStack.pop();
+            double prevValue = CalculatorUtilities.convertStringToDouble(calculationStack.pop());
+            currentValue = CalculatorUtilities.applyOperation(prevOperation,prevValue,currentValue);
+            prevOperation = Operation.valueOf(calculationStack.peek());
+        }
+        displayStringObserver.updateString(CalculatorUtilities.convertDoubleToString(currentValue));
+        if (prevOperation.equals(Operation.OPENBRACKET)) {
+            calculationStack.pop();
+        }
+    }
+
+    private void applyOperation(Operation operation) {
+        Operation currentOperation = Operation.valueOf(calculationStack.peek());
+        if (currentOperation.isLowerPrecedence(operation)) {
+            calculationStack.push(displayStringObserver.getObservedString());
+            if (!operation.equals(Operation.NULL)) {
+                displayStringObserver.updateString("0", false);
+                calculationStack.push(operation.name());
+            } else {
+                calculationStack.removeAllElements();
+                calculationStack.push(Operation.NULL.name());
+            }
+        } else {
+            double displayValue = CalculatorUtilities.convertStringToDouble(displayStringObserver.getObservedString());
+            Operation previousOperation = Operation.valueOf(calculationStack.pop());
+            double previousValue = CalculatorUtilities.convertStringToDouble(calculationStack.pop());
+            String newValue = CalculatorUtilities.applyOperationAndGetString(previousOperation, previousValue, displayValue);
+            displayStringObserver.updateString(newValue);
+            applyOperation(operation);
+        }
+    }
+
+    private void handleTrigonometryOperation(Button button, double textValue) {
+        int buttonId = button.getId();
+        if (!isRadian && !isMoreOperation) {
+            textValue = textValue * Math.PI / 180;
+        }
+        double newValue;
+        switch (buttonId) {
+            case R.id.sinButton:
+                newValue = isMoreOperation ? Math.asin(textValue) : Math.sin(textValue);
+                break;
+            case R.id.cosButton:
+                newValue = isMoreOperation ? Math.acos(textValue) : Math.cos(textValue);
+                break;
+            case R.id.tanButton:
+                newValue = isMoreOperation ? Math.atan(textValue) : Math.tan(textValue);
+                break;
+            case R.id.sinhButton:
+                newValue = isMoreOperation ? CalculatorUtilities.asinh(textValue) : Math.sinh(textValue);
+                break;
+            case R.id.coshButton:
+                newValue = isMoreOperation ? CalculatorUtilities.acosh(textValue) : Math.cosh(textValue);
+                break;
+            case R.id.tanhButton:
+                newValue = isMoreOperation ? CalculatorUtilities.atanh(textValue) : Math.tanh(textValue);
+                break;
+            default:
+                return;
+        }
+        if (!isRadian && isMoreOperation) {
+            newValue = newValue * 180 / Math.PI;
+        }
+        displayStringObserver.updateString(CalculatorUtilities.convertDoubleToString(newValue));
+    }
+
+    private void handleMoreOptionButton() {
+        int[] trigonoButtonIdArrray = {
+                R.id.sinButton,
+                R.id.cosButton,
+                R.id.tanButton,
+                R.id.sinhButton,
+                R.id.coshButton,
+                R.id.tanhButton
+        };
+        String[] trigonoButtonStringArrray = {
+                "sin",
+                "cos",
+                "tan",
+                "sinh",
+                "cosh",
+                "tanh",
+        };
+        for (int i = 0; i<6; i++) {
+            Button button = (Button) findViewById(trigonoButtonIdArrray[i]);
+            if (!isMoreOperation) {
+                button.setText(trigonoButtonStringArrray[i] + "⁻¹");
+                button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+            } else {
+                button.setText(trigonoButtonStringArrray[i]);
+            }
+        }
+        isMoreOperation = !isMoreOperation;
+    }
+
+    private void handleRadianButton() {
+        Button radianButton = (Button) findViewById(R.id.radianButton);
+        if (isRadian) {
+            radianButton.setText("Rad");
+        } else {
+            radianButton.setText("Deg");
+        }
+        isRadian = !isRadian;
     }
 
     private void clearSingleDigit() {
